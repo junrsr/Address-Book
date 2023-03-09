@@ -1,6 +1,7 @@
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow
 import sys
+import mysql.connector
 
 class MyWindow(QMainWindow):
     def __init__(self):
@@ -90,15 +91,31 @@ class MyWindow(QMainWindow):
         self.show()
     
     def submitForm(self):
-        print("You have submitted this form with the following details:")
-        print(self.fNameTextbox.text())
-        print(self.lNameTextbox.text())
-        print(self.addressTextbox.text())
-        print(self.cityTextbox.text())
-        print(self.postcodeTextbox.text())
-        print(self.phoneNumberTextbox.text())
-        print(self.emailTextbox.text())
+        conn = mysql.connector.connect(host="localhost", database="addressBook", user="root", password="sGs-w1llncc")
+        cursor = conn.cursor()
 
+        print(type(self.fNameTextbox.text()))
+        
+        
+        try:
+            cursor.execute(f"""insert into people(firstName, lastName, address, city, postcode, phoneNumber, email) values(
+                '{self.fNameTextbox.text()}',
+                '{self.lNameTextbox.text()}',
+                '{self.addressTextbox.text()}',
+                '{self.cityTextbox.text()}',
+                '{self.postcodeTextbox.text()}',
+                '{self.phoneNumberTextbox.text()}',
+                '{self.emailTextbox.text()}')""")
+            print("Successfully added to the database")
+            conn.commit()
+            
+        except:
+            print("Unable to add to the database")
+            conn.rollback()
+        
+        finally:
+            cursor.close()
+            conn.close()
         self.update()
 
     def update(self):

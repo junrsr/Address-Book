@@ -129,8 +129,6 @@ class ViewDetails(QTableWidget):
 
     def __init__(self):
         QTableWidget.__init__(self, self.getNoOfEntries(), 7)
-        self.setGeometry(0, 0, 620, 300)
-        self.setWindowTitle("Address Book")
         self.setData()
         self.resizeColumnsToContents()
         self.resizeRowsToContents()
@@ -146,6 +144,9 @@ class ViewDetails(QTableWidget):
         return len(self.rows)
     
     def setData(self):
+        self.setGeometry(0, 0, 620, 325)
+        self.setWindowTitle("Address Book")
+        
         horHeaders = ["First Name", "Last Name", "Address", "City", "Postcode", "Phone Number", "Email Address"]
 
         for x in range(len(self.rows)):
@@ -156,11 +157,21 @@ class ViewDetails(QTableWidget):
         self.setHorizontalHeaderLabels(horHeaders)
         self.verticalHeader().setVisible(False)
 
+        # BUTTON
+        self.submitButton = QtWidgets.QPushButton(self)
+        self.submitButton.setText("Add Entry")
+        self.submitButton.move(250, 250)
+        self.submitButton.clicked.connect(self.addEntry)
+    
+    def addEntry(self):
+        self.dialog = EnterDetails()
+        self.dialog.show()
+        self.close()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    win = EnterDetails()
-    #win = ViewDetails()
+    #win = EnterDetails()
+    win = ViewDetails()
 
     sys.exit(app.exec_())
     

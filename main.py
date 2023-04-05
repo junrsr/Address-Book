@@ -120,6 +120,9 @@ class EnterDetails(QMainWindow):
 
     def update(self):
         print("Updating...")
+        self.dialog = ViewDetails()
+        self.dialog.show()
+        self.close()
 
 
 class ViewDetails(QTableWidget):
@@ -156,8 +159,8 @@ class ViewDetails(QTableWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    #win = EnterDetails()
-    win = ViewDetails()
+    win = EnterDetails()
+    #win = ViewDetails()
 
     sys.exit(app.exec_())
     

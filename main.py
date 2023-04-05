@@ -1,11 +1,11 @@
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QApplication, QMainWindow
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem
 import sys
 import mysql.connector
 
-class MyWindow(QMainWindow):
+class EnterDetails(QMainWindow):
     def __init__(self):
-        super(MyWindow, self).__init__()
+        super(EnterDetails, self).__init__()
         self.setGeometry(0, 0, 600, 600)
         self.setWindowTitle("Address Book")
         self.initUI()
@@ -121,8 +121,44 @@ class MyWindow(QMainWindow):
     def update(self):
         print("Updating...")
 
+
+class ViewDetails(QTableWidget):
+
+    def __init__(self):
+        QTableWidget.__init__(self, self.getNoOfEntries(), 7)
+        self.setGeometry(0, 0, 620, 300)
+        self.setWindowTitle("Address Book")
+        self.setData()
+        self.resizeColumnsToContents()
+        self.resizeRowsToContents()
+        self.show()
+    
+    def getNoOfEntries(self):
+        self.conn = mysql.connector.connect(host="localhost", database="addressBook", user="root", password="sGs-w1llncc")
+        self.cursor = self.conn.cursor()
+
+        self.cursor.execute("select firstName, lastName, address, city, postcode, phoneNumber, email from people order by lastName")
+        self.rows = self.cursor.fetchall()
+
+        return len(self.rows)
+    
+    def setData(self):
+        horHeaders = ["First Name", "Last Name", "Address", "City", "Postcode", "Phone Number", "Email Address"]
+
+        for x in range(len(self.rows)):
+            for y in range(len(self.rows[x])):
+                newItem = QTableWidgetItem(self.rows[x][y])
+                self.setItem(x, y, newItem)
+
+        self.setHorizontalHeaderLabels(horHeaders)
+        self.verticalHeader().setVisible(False)
+
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    win = MyWindow()
-    
+    #win = EnterDetails()
+    win = ViewDetails()
+
     sys.exit(app.exec_())
+    
+#TODO ADD FUNCTIONALITY TO SWITCH BETWEEN PAGES (plus button to add entry? switch back to database by default?)

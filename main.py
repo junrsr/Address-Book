@@ -85,16 +85,21 @@ class EnterDetails(QMainWindow):
         # SUBMIT BUTTON
         self.submitButton = QtWidgets.QPushButton(self)
         self.submitButton.setText("Submit")
-        self.submitButton.move(250, 500)
+        self.submitButton.move(325, 500)
         self.submitButton.clicked.connect(self.submitForm)
 
+        # CANCEL BUTTON
+        self.submitButton = QtWidgets.QPushButton(self)
+        self.submitButton.setText("Cancel")
+        self.submitButton.move(175, 500)
+        self.submitButton.clicked.connect(self.update)
+
         self.show()
+    
     
     def submitForm(self):
         conn = mysql.connector.connect(host="localhost", database="addressBook", user="root", password="sGs-w1llncc")
         cursor = conn.cursor()
-
-        print(type(self.fNameTextbox.text()))
         
         
         try:
@@ -175,4 +180,5 @@ if __name__ == "__main__":
 
     sys.exit(app.exec_())
     
-#TODO ADD FUNCTIONALITY TO SWITCH BETWEEN PAGES (plus button to add entry? switch back to database by default?)
+#TODO VALIDATION ON TABLE ADDITIONS
+#TODO PLACEMENT OF ADD BUTTON

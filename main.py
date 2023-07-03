@@ -94,6 +94,14 @@ class EnterDetails(QMainWindow):
         self.submitButton.move(175, 500)
         self.submitButton.clicked.connect(self.update)
 
+        # ERROR MESSAGE
+        self.errorLabel = QtWidgets.QLabel(self)
+        self.errorLabel.setText("Please Complete The Form")
+        self.errorLabel.move(250, 450)
+        self.errorLabel.resize(200, 30)
+        self.errorLabel.setVisible(False)
+        self.errorLabel.setStyleSheet("color: red")
+
         self.show()
     
     
@@ -101,27 +109,29 @@ class EnterDetails(QMainWindow):
         conn = mysql.connector.connect(host="localhost", database="addressBook", user="root", password="sGs-w1llncc")
         cursor = conn.cursor()
         
-        
-        try:
-            cursor.execute(f"""insert into people(firstName, lastName, address, city, postcode, phoneNumber, email) values(
-                '{self.fNameTextbox.text()}',
-                '{self.lNameTextbox.text()}',
-                '{self.addressTextbox.text()}',
-                '{self.cityTextbox.text()}',
-                '{self.postcodeTextbox.text()}',
-                '{self.phoneNumberTextbox.text()}',
-                '{self.emailTextbox.text()}')""")
-            print("Successfully added to the database")
-            conn.commit()
+        if self.fNameTextbox.text() == "" or self.lNameTextbox.text() == "" or self.addressTextbox.text() == "" or self.cityTextbox.text() == "" or self.postcodeTextbox.text() == "" or self.phoneNumberTextbox.text() == "" or self.emailTextbox.text() == "":
+            self.errorLabel.setVisible(True)
+        else:
+            try:
+                cursor.execute(f"""insert into people(firstName, lastName, address, city, postcode, phoneNumber, email) values(
+                    '{self.fNameTextbox.text()}',
+                    '{self.lNameTextbox.text()}',
+                    '{self.addressTextbox.text()}',
+                    '{self.cityTextbox.text()}',
+                    '{self.postcodeTextbox.text()}',
+                    '{self.phoneNumberTextbox.text()}',
+                    '{self.emailTextbox.text()}')""")
+                print("Successfully added to the database")
+                conn.commit()
+                
+            except:
+                print("Unable to add to the database")
+                conn.rollback()
             
-        except:
-            print("Unable to add to the database")
-            conn.rollback()
-        
-        finally:
-            cursor.close()
-            conn.close()
-        self.update()
+            finally:
+                cursor.close()
+                conn.close()
+            self.update()
 
     def update(self):
         print("Updating...")

@@ -159,7 +159,7 @@ class ViewDetails(QTableWidget):
         return len(self.rows)
     
     def setData(self):
-        self.setGeometry(0, 0, 620, 325)
+        self.setGeometry(0, 0, 640, self.getNoOfEntries() * 25 + 50)
         self.setWindowTitle("Address Book")
         
         horHeaders = ["First Name", "Last Name", "Address", "City", "Postcode", "Phone Number", "Email Address"]
@@ -175,7 +175,7 @@ class ViewDetails(QTableWidget):
         # BUTTON
         self.submitButton = QtWidgets.QPushButton(self)
         self.submitButton.setText("Add Entry")
-        self.submitButton.move(250, 250)
+        self.submitButton.move(250, self.getNoOfEntries() * 25 + 10)
         self.submitButton.clicked.connect(self.addEntry)
     
     def addEntry(self):
@@ -185,10 +185,6 @@ class ViewDetails(QTableWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    #win = EnterDetails()
     win = ViewDetails()
 
     sys.exit(app.exec_())
-    
-#TODO VALIDATION ON TABLE ADDITIONS
-#TODO PLACEMENT OF ADD BUTTON
